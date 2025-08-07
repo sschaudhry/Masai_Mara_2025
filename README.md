@@ -19,17 +19,6 @@ Mortality vs. both SPI & NDVI together
 
 - Calculates a suggested payout trigger (the 20th percentile SPI value).
 
-## Makes and saves two clear plots:
-
-plot_spi.png (mortality vs. SPI)
-
-plot_ndvi.png (mortality vs. NDVI)
-
-## How to use it:
-
-Place your CSV file in the repo (must match the filename in the script: mortality_spi_ndvi (1).csv).
-
-Open R or RStudio.
 
 ## Install the needed packages (first time only):
 

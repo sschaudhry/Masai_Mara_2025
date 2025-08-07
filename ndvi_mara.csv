@@ -1,0 +1,191 @@
+// Google Earth Engine JavaScript code (run in GEE Code Editor)
+
+// Define Masai Mara bounding box
+var roi = ee.Geometry.Rectangle([34.8, -1.5, 35.5, -1.0]);
+
+// MOD13A3: Monthly NDVI, scale factor 0.0001
+var dataset = ee.ImageCollection('MODIS/006/MOD13A3')
+  .filterDate('2009-01-01', '2020-12-31')
+  .select('NDVI')
+  .map(function(img) {
+    // Scale NDVI to 0-1
+    return img.multiply(0.0001).copyProperties(img, ['system:time_start']);
+  });
+
+// Function to get monthly mean NDVI
+var monthlyMeans = ee.List.sequence(2009, 2020).map(function(year) {
+  year = ee.Number(year);
+  return ee.List.sequence(1, 12).map(function(month) {
+    var start = ee.Date.fromYMD(year, month, 1);
+    var end = start.advance(1, 'month');
+    var monthly = dataset.filterDate(start, end);
+    var mean = monthly.mean().reduceRegion({
+      reducer: ee.Reducer.mean(),
+      geometry: roi,
+      scale: 1000,
+      maxPixels: 1e9
+    });
+    return ee.Feature(null, {
+      date: start.format('YYYY-MM-dd'),
+      ndvi: mean.get('NDVI')
+    });
+  });
+}).flatten();
+
+// Mock NDVI data for Masai Mara, monthly from Jan 2009 to Dec 2020
+var mockData = [
+  {month: '2009-01', ndvi: 0.32},
+  {month: '2009-02', ndvi: 0.28},
+  {month: '2009-03', ndvi: 0.25},
+  {month: '2009-04', ndvi: 0.30},
+  {month: '2009-05', ndvi: 0.33},
+  {month: '2009-06', ndvi: 0.29},
+  {month: '2009-07', ndvi: 0.27},
+  {month: '2009-08', ndvi: 0.31},
+  {month: '2009-09', ndvi: 0.34},
+  {month: '2009-10', ndvi: 0.36},
+  {month: '2009-11', ndvi: 0.32},
+  {month: '2009-12', ndvi: 0.30},
+  {month: '2010-01', ndvi: 0.45},
+  {month: '2010-02', ndvi: 0.48},
+  {month: '2010-03', ndvi: 0.52},
+  {month: '2010-04', ndvi: 0.55},
+  {month: '2010-05', ndvi: 0.58},
+  {month: '2010-06', ndvi: 0.60},
+  {month: '2010-07', ndvi: 0.62},
+  {month: '2010-08', ndvi: 0.65},
+  {month: '2010-09', ndvi: 0.63},
+  {month: '2010-10', ndvi: 0.60},
+  {month: '2010-11', ndvi: 0.57},
+  {month: '2010-12', ndvi: 0.54},
+  {month: '2011-01', ndvi: 0.38},
+  {month: '2011-02', ndvi: 0.34},
+  {month: '2011-03', ndvi: 0.30},
+  {month: '2011-04', ndvi: 0.27},
+  {month: '2011-05', ndvi: 0.25},
+  {month: '2011-06', ndvi: 0.29},
+  {month: '2011-07', ndvi: 0.32},
+  {month: '2011-08', ndvi: 0.35},
+  {month: '2011-09', ndvi: 0.37},
+  {month: '2011-10', ndvi: 0.33},
+  {month: '2011-11', ndvi: 0.30},
+  {month: '2011-12', ndvi: 0.28},
+  {month: '2012-01', ndvi: 0.50},
+  {month: '2012-02', ndvi: 0.53},
+  {month: '2012-03', ndvi: 0.56},
+  {month: '2012-04', ndvi: 0.59},
+  {month: '2012-05', ndvi: 0.61},
+  {month: '2012-06', ndvi: 0.63},
+  {month: '2012-07', ndvi: 0.65},
+  {month: '2012-08', ndvi: 0.67},
+  {month: '2012-09', ndvi: 0.64},
+  {month: '2012-10', ndvi: 0.61},
+  {month: '2012-11', ndvi: 0.58},
+  {month: '2012-12', ndvi: 0.55},
+  {month: '2013-01', ndvi: 0.52},
+  {month: '2013-02', ndvi: 0.54},
+  {month: '2013-03', ndvi: 0.56},
+  {month: '2013-04', ndvi: 0.58},
+  {month: '2013-05', ndvi: 0.60},
+  {month: '2013-06', ndvi: 0.62},
+  {month: '2013-07', ndvi: 0.64},
+  {month: '2013-08', ndvi: 0.66},
+  {month: '2013-09', ndvi: 0.63},
+  {month: '2013-10', ndvi: 0.60},
+  {month: '2013-11', ndvi: 0.57},
+  {month: '2013-12', ndvi: 0.54},
+  {month: '2014-01', ndvi: 0.70},
+  {month: '2014-02', ndvi: 0.72},
+  {month: '2014-03', ndvi: 0.74},
+  {month: '2014-04', ndvi: 0.76},
+  {month: '2014-05', ndvi: 0.78},
+  {month: '2014-06', ndvi: 0.80},
+  {month: '2014-07', ndvi: 0.82},
+  {month: '2014-08', ndvi: 0.84},
+  {month: '2014-09', ndvi: 0.81},
+  {month: '2014-10', ndvi: 0.78},
+  {month: '2014-11', ndvi: 0.75},
+  {month: '2014-12', ndvi: 0.72},
+  {month: '2015-01', ndvi: 0.68},
+  {month: '2015-02', ndvi: 0.65},
+  {month: '2015-03', ndvi: 0.62},
+  {month: '2015-04', ndvi: 0.59},
+  {month: '2015-05', ndvi: 0.56},
+  {month: '2015-06', ndvi: 0.53},
+  {month: '2015-07', ndvi: 0.50},
+  {month: '2015-08', ndvi: 0.47},
+  {month: '2015-09', ndvi: 0.44},
+  {month: '2015-10', ndvi: 0.41},
+  {month: '2015-11', ndvi: 0.38},
+  {month: '2015-12', ndvi: 0.35},
+  {month: '2016-01', ndvi: 0.30},
+  {month: '2016-02', ndvi: 0.28},
+  {month: '2016-03', ndvi: 0.26},
+  {month: '2016-04', ndvi: 0.24},
+  {month: '2016-05', ndvi: 0.22},
+  {month: '2016-06', ndvi: 0.25},
+  {month: '2016-07', ndvi: 0.28},
+  {month: '2016-08', ndvi: 0.31},
+  {month: '2016-09', ndvi: 0.34},
+  {month: '2016-10', ndvi: 0.37},
+  {month: '2016-11', ndvi: 0.40},
+  {month: '2016-12', ndvi: 0.43},
+  {month: '2017-01', ndvi: 0.35},
+  {month: '2017-02', ndvi: 0.32},
+  {month: '2017-03', ndvi: 0.29},
+  {month: '2017-04', ndvi: 0.26},
+  {month: '2017-05', ndvi: 0.24},
+  {month: '2017-06', ndvi: 0.27},
+  {month: '2017-07', ndvi: 0.30},
+  {month: '2017-08', ndvi: 0.33},
+  {month: '2017-09', ndvi: 0.36},
+  {month: '2017-10', ndvi: 0.39},
+  {month: '2017-11', ndvi: 0.42},
+  {month: '2017-12', ndvi: 0.45},
+  {month: '2018-01', ndvi: 0.60},
+  {month: '2018-02', ndvi: 0.62},
+  {month: '2018-03', ndvi: 0.64},
+  {month: '2018-04', ndvi: 0.66},
+  {month: '2018-05', ndvi: 0.68},
+  {month: '2018-06', ndvi: 0.70},
+  {month: '2018-07', ndvi: 0.72},
+  {month: '2018-08', ndvi: 0.74},
+  {month: '2018-09', ndvi: 0.71},
+  {month: '2018-10', ndvi: 0.68},
+  {month: '2018-11', ndvi: 0.65},
+  {month: '2018-12', ndvi: 0.62},
+  {month: '2019-01', ndvi: 0.58},
+  {month: '2019-02', ndvi: 0.55},
+  {month: '2019-03', ndvi: 0.52},
+  {month: '2019-04', ndvi: 0.49},
+  {month: '2019-05', ndvi: 0.46},
+  {month: '2019-06', ndvi: 0.43},
+  {month: '2019-07', ndvi: 0.40},
+  {month: '2019-08', ndvi: 0.37},
+  {month: '2019-09', ndvi: 0.34},
+  {month: '2019-10', ndvi: 0.31},
+  {month: '2019-11', ndvi: 0.28},
+  {month: '2019-12', ndvi: 0.25},
+  {month: '2020-01', ndvi: 0.30},
+  {month: '2020-02', ndvi: 0.33},
+  {month: '2020-03', ndvi: 0.36},
+  {month: '2020-04', ndvi: 0.39},
+  {month: '2020-05', ndvi: 0.42},
+  {month: '2020-06', ndvi: 0.45},
+  {month: '2020-07', ndvi: 0.48},
+  {month: '2020-08', ndvi: 0.51},
+  {month: '2020-09', ndvi: 0.54},
+  {month: '2020-10', ndvi: 0.57},
+  {month: '2020-11', ndvi: 0.60},
+  {month: '2020-12', ndvi: 0.63},
+  // Outliers
+  {month: '2013-06', ndvi: 0.80},  // Outlier: unusually high NDVI
+  {month: '2016-03', ndvi: 0.10}   // Outlier: unusually low NDVI
+];
+
+// Export as CSV
+Export.table.toDrive({
+  collection: ee.FeatureCollection(monthlyMeans),
+  description: 'ndvi_mara_export',
+  fileFormat: 'CSV'
+});

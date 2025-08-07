@@ -1,0 +1,19 @@
+
+Call:
+lm(formula = mortality_rate_pct ~ avg_spi3, data = merged)
+
+Residuals:
+     1      2      3      4      5      6      7 
+ 76.94 -81.21 113.30  14.30 -39.95 -26.00 -57.38 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)  
+(Intercept)   117.56      29.87   3.936    0.011 *
+avg_spi3       64.66      78.35   0.825    0.447  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 78.89 on 5 degrees of freedom
+Multiple R-squared:  0.1199,	Adjusted R-squared:  -0.05611 
+F-statistic: 0.6812 on 1 and 5 DF,  p-value: 0.4467
+

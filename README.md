@@ -1,4 +1,4 @@
-# Masai_Mara_2025
+# Maasai_Mara_2025
 Maasai Mara: Simple Livestock Mortality Regression (R Script)
 A basic, tidyverse-powered R script for exploring how drought (SPI) and vegetation (NDVI) affect livestock mortality in Kenya’s Maasai Mara.
 No extra packages needed beyond dplyr, ggplot2, and readr.
